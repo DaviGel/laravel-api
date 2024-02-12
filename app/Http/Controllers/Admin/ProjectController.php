@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -27,8 +28,9 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        $projects = Project::all();
-        return view('create', compact('types', 'projects'));
+        $technologies = Technology::all();
+        // $projects = Project::all();
+        return view('create', compact('types', 'technologies'));
     }
 
     /**
@@ -41,6 +43,9 @@ class ProjectController extends Controller
         $project->fill($data);
         $project->slug = Str::of($project->title)->slug('-');
         $project->save();
+        if (isset($data['technologies'])) {
+            $project->technologies()->sync($data['technologies']);
+        }
         return redirect()->route('admin.projects.index', $project)->with('message', 'Progetto creato correttamente');
     }
 
@@ -59,7 +64,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -70,6 +76,11 @@ class ProjectController extends Controller
         $data = $request->validated();
         $project->slug = Str::of($data['title'])->slug('-');
         $project->update($data);
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($data['technologies']);
+        } else {
+            $project->technologies()->sync([]);
+        }
         return redirect()->route('admin.projects.index', $project)->with('message', 'Progetto aggiornato correttamente');
     }
 
@@ -78,6 +89,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->sync([]);
         $project->delete();
         return redirect()->route('admin.projects.index')->with('message', 'Progetto cancellato correttamente');
     }
