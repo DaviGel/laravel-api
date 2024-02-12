@@ -13,6 +13,12 @@
                         <div class="category">
                             Categoria: {{ $project->type?->name }}
                         </div>
+                        <div class="technologies">
+                            Tecnologie:
+                            @foreach ($project->technologies as $technology)
+                                {{ $technology->name }}
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
