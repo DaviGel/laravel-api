@@ -2,7 +2,7 @@
 
 ## Roadmap
 
--   [] creare la migration per la tabella technologies
+-   [x] creare la migration per la tabella technologies
 -   [] creare il model Technology
 -   [] creare la migration per la tabella pivot project_technology
 -   [] aggiungere ai model Technology e Project i metodi per definire la relazione many to many
