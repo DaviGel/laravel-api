@@ -27,7 +27,7 @@
                                 @enderror
                             </div>
                             <select class="form-select mb-3" aria-label="Default select example" name="type_id">
-                                <option selected>Scegli la categoria</option>
+                                <option value="" selected>Scegli la categoria</option>
                                 @foreach ($types as $type)
                                     <option value="{{ $type->id }}" @if (old('type_id') == $type->id) selected @endif>
                                         {{ $type->name }}
