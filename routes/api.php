@@ -19,4 +19,4 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::get('/', [ProjectController::class, 'index']);
+Route::get('/projects', [ProjectController::class, 'index']);
