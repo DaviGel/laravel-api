@@ -10,13 +10,28 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        // Salvo tutti i progetti nella variabile projects
-        $projects = Project::paginate(12);
-        // Converto i progetti in un json che conterrà due chiavi: success (settato a true) e results (contentente tutti i progetti)
-        return response()->json([
-            'success' => true,
-            'results' => $projects,
+
+        request()->validate([
+            'key' => ['nullable', 'string', 'min:3']
         ]);
+
+        if (request()->key) {
+            $projects = Project::where('title', 'LIKE', '%' . request()->key . '%')->orWhere('description', 'LIKE' . '%' . request()->key . '%')->paginate(9);
+        } else {
+            $projects = Project::paginate(9);
+        }
+
+        if ($projects) {
+            return response()->json([
+                'success' => true,
+                'results' => $projects,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'results' => [],
+            ], 200);
+        }
     }
 
     public function show(string $slug)
